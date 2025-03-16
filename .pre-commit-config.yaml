@@ -1,0 +1,44 @@
+# .pre-commit-config.yaml
+repos:
+  # General-purpose pre-commit hooks for file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1  # Use the latest stable version; check for updates
+    hooks:
+      - id: check-yaml
+        stages: [pre-commit]  # Runs on staged files
+      - id: end-of-file-fixer
+        stages: [pre-commit]
+      - id: trailing-whitespace
+        stages: [pre-commit]
+
+  # Local hooks for custom tools installed in the virtual environment
+  - repo: local
+    hooks:
+      # Pylint for syntax and style checking
+      - id: pylint
+        name: pylint
+        entry: pylint
+        language: system
+        types: [python]
+        stages: [pre-commit]  # Runs only on staged Python files
+        args: [--rcfile=.pylintrc]  # Optional: Use a custom config file if defined
+
+      # Pytest for running tests on staged files (indirectly via project context)
+      - id: pytest
+        name: pytest
+        entry: pytest
+        language: system
+        stages: [pre-commit]
+        pass_filenames: false  # Runs pytest on all tests, not just staged test files
+        args: [tests/]  # Specifies the tests/ directory as the test root
+
+  # Gitlint for commit message validation
+  - repo: https://github.com/jorisroovers/gitlint
+    rev: v0.15.1  # Use the latest stable version; check for updates
+    hooks:
+      - id: gitlint
+        stages: [commit-msg]  # Runs only on commit message
+
+# Optional: Default language version (if needed, though system handles it here)
+default_language_version:
+  python: python3  # Ensures compatibility with your Python version
