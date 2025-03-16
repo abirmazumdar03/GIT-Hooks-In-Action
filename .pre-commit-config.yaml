@@ -1,0 +1,34 @@
+repos:
+  # General-purpose hooks for basic file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+      - id: check-yaml           # Ensures YAML files are valid
+      - id: end-of-file-fixer    # Adds newline at end of files
+      - id: trailing-whitespace  # Removes trailing whitespace
+
+  # Local hooks for tools installed in your environment
+  - repo: local
+    hooks:
+      # Syntax and style checking with pylint
+      - id: pylint
+        name: pylint
+        entry: pylint
+        language: system
+        types: [python]
+        args: [--rcfile=.pylintrc]  # Optional: customize with a config file
+
+      # Run tests with pytest
+      - id: pytest
+        name: pytest
+        entry: pytest
+        language: system
+        types: [python]
+        pass_filenames: false       # Runs pytest on all tests, not just staged files
+
+  # Commit message verification with gitlint
+  - repo: https://github.com/jorisroovers/gitlint
+    rev: v0.15.1
+    hooks:
+      - id: gitlint
+        stages: [commit-msg]        # Runs only on commit messages
